@@ -1,0 +1,62 @@
+gpu_id: '0'
+log_wandb: False
+reproducibility: True
+# ===== 模型结构参数 =====
+hidden_size: 64                 
+n_layers:   2                   # [1 2 3 4]
+loss_type: 'CE'                 # 主任务仍然是 CrossEntropy
+
+d_state: 32                     
+d_conv: 4                       
+expand: 2
+
+
+n_heads:  4                     # [1 2 4 8 16 32](必须能被hidden_size整除)
+hidden_act: 'gelu'              
+
+dropout_prob: 0.3               # 总的Dropout 
+
+attn_dropout_prob: 0.1          # Attention的Dropout
+hidden_dropout_prob: 0.2        # Feed Forward的Dropout
+
+
+# ===== 数据集设置 =====
+# dataset: ml-1m
+MAX_ITEM_LIST_LENGTH: 200       # 200 for MovieLens-1M
+
+dataset: amazon-beauty
+# dataset: amazon-clothing
+# dataset: steam
+MAX_ITEM_LIST_LENGTH: 50      
+
+USER_ID_FIELD: user_id
+ITEM_ID_FIELD: item_id
+load_col:
+    inter: [user_id, item_id, timestamp]
+
+user_inter_num_interval: "[5,inf)"
+item_inter_num_interval: "[5,inf)"
+
+# ===== 训练设置 =====
+epochs: 300
+train_batch_size: 2048
+learner: adam
+learning_rate: 0.001
+eval_step: 1
+stopping_step: 10
+train_neg_sample_args: ~
+
+initializer_range: 0.02
+weight_decay: 0.0
+
+
+# ===== 评估设置 =====
+weight_decay: 0.0
+metrics: ['Hit', 'NDCG', 'MRR']
+valid_metric: NDCG@10
+eval_batch_size: 4096
+topk: [10]
+
+seed: 42
+
+

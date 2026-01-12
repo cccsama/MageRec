@@ -1,0 +1,70 @@
+gpu_id: '0'
+log_wandb: False
+seed: 42  # 调整为与 Mamba4Rec 一致
+
+# sigma model settings
+hidden_size: 64                 # Number of features in the hidden state
+num_layers: 2                   # Number of SIGMA layers
+dropout_prob: 0.2               # Dropout rate
+loss_type: 'CE'                 # Loss function, 'BPR' or 'CE'
+d_state: 32                     # SSM state expansion factor
+d_conv: 4                       # Local convolution width
+expand: 2                       # Block expansion factor
+
+# GLINT settings
+layer_norm_eps: 1e-12           # Epsilon value for layer normalization
+n_heads: 8                      # Number of attention heads
+hidden_dropout_prob: 0.3
+attn_dropout_prob: 0.3
+embedding_size: 64
+
+# SMPL4Rec settings
+selected_features: ['item_id']
+pooling_mode: 'mean'
+hidden_act: 'gelu'
+n_layers: 1
+
+## dataset settings
+# dataset: ml-1m
+# MAX_ITEM_LIST_LENGTH: 200       # 200 for MovieLens-1M
+
+dataset: amazon-beauty
+# dataset: amazon-clothing
+# dataset: amazon-sports
+# dataset: amazon-video-games
+# dataset: amazon-toys
+# dataset: yelp
+# dataset: kuairand
+# dataset: steam
+MAX_ITEM_LIST_LENGTH: 50      # 50 for Amazon datasets
+
+USER_ID_FIELD: user_id
+ITEM_ID_FIELD: item_id
+load_col:
+    inter: [user_id, item_id, timestamp]
+
+# USER_ID_FIELD: user_id
+# ITEM_ID_FIELD: product_id
+# load_col:
+#    inter: [user_id, product_id, timestamp]
+
+user_inter_num_interval: "[5,inf)"
+item_inter_num_interval: "[5,inf)"
+
+# training settings
+epochs: 300
+train_batch_size: 2048
+learner: adam
+learning_rate: 0.001
+eval_step: 1
+stopping_step: 10
+train_neg_sample_args: ~
+
+# evaluation settings
+weight_decay: 0.0
+metrics: ['Hit', 'NDCG', 'MRR', 'Precision', 'Recall', 'MAP']
+valid_metric: NDCG@10
+eval_batch_size: 4096
+topk: [5,10,20]
+
+seed: 42
